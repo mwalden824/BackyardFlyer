@@ -42,28 +42,28 @@ class UpAndDownFlyer(Drone):
 
             # check if altitude is within 95% of target
             if altitude > 0.95 * self.target_position[2]:
-                self.waypoint1_transition()
+                self.waypoint_transition()
 
         if self.flight_phase == Phases.WAYPOINT1:
             pos_north = self.local_position[0]
             pos_east = self.local_position[1]
 
             if (abs(pos_north - self.target_position[0]) < 0.1) and (abs(pos_east - self.target_position[1]) < 0.1):
-                self.waypoint2_transition()
+                self.waypoint_transition()
 
         if self.flight_phase == Phases.WAYPOINT2:
             pos_north = self.local_position[0]
             pos_east = self.local_position[1]
 
             if (abs(pos_north - self.target_position[0]) < 0.1) and (abs(pos_east - self.target_position[1]) < 0.1):
-                self.waypoint3_transition()
+                self.waypoint_transition()
 
         if self.flight_phase == Phases.WAYPOINT3:
             pos_north = self.local_position[0]
             pos_east = self.local_position[1]
 
             if (abs(pos_north - self.target_position[0]) < 0.1) and (abs(pos_east - self.target_position[1]) < 0.1):
-                self.returnhome_transition()
+                self.waypoint_transition()
 
         if self.flight_phase == Phases.RETURNHOME:
             pos_north = self.local_position[0]
@@ -110,41 +110,39 @@ class UpAndDownFlyer(Drone):
         self.takeoff(target_altitude)
         self.flight_phase = Phases.TAKEOFF
     
-    def waypoint1_transition(self):
-        print("Waypoint 1 Transition")
-        target_position_north = 0
-        target_position_east = 10
-        self.target_position[0] = target_position_north
-        self.target_position[1] = target_position_east
-        self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
-        self.flight_phase = Phases.WAYPOINT1
-
-    def waypoint2_transition(self):
-        print("Waypoint 2 Transition")
-        target_position_north = 10
-        target_position_east = 10
-        self.target_position[0] = target_position_north
-        self.target_position[1] = target_position_east
-        self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
-        self.flight_phase = Phases.WAYPOINT2
-
-    def waypoint3_transition(self):
-        print("Waypoint 3 Transition")
-        target_position_north = 10
-        target_position_east = 0
-        self.target_position[0] = target_position_north
-        self.target_position[1] = target_position_east
-        self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
-        self.flight_phase = Phases.WAYPOINT3
-
-    def returnhome_transition(self):
-        print("Return Home Transition")
-        target_position_north = 0
-        target_position_east = 0
-        self.target_position[0] = target_position_north
-        self.target_position[1] = target_position_east
-        self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
-        self.flight_phase = Phases.RETURNHOME
+    def waypoint_transition(self):
+        if self.flight_phase == Phases.TAKEOFF:
+            print("Waypoint 1 Transition")
+            target_position_north = 0
+            target_position_east = 10
+            self.target_position[0] = target_position_north
+            self.target_position[1] = target_position_east
+            self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
+            self.flight_phase = Phases.WAYPOINT1
+        elif self.flight_phase == Phases.WAYPOINT1:
+            print("Waypoint 2 Transition")
+            target_position_north = 10
+            target_position_east = 10
+            self.target_position[0] = target_position_north
+            self.target_position[1] = target_position_east
+            self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
+            self.flight_phase = Phases.WAYPOINT2
+        elif self.flight_phase == Phases.WAYPOINT2:
+            print("Waypoint 3 Transition")
+            target_position_north = 10
+            target_position_east = 0
+            self.target_position[0] = target_position_north
+            self.target_position[1] = target_position_east
+            self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
+            self.flight_phase = Phases.WAYPOINT3
+        elif self.flight_phase == Phases.WAYPOINT3:
+            print("Return Home Transition")
+            target_position_north = 0
+            target_position_east = 0
+            self.target_position[0] = target_position_north
+            self.target_position[1] = target_position_east
+            self.cmd_position(target_position_north, target_position_east, self.target_position[2], 0)
+            self.flight_phase = Phases.RETURNHOME
 
     def landing_transition(self):
         print("landing transition")
